@@ -5,26 +5,36 @@ pub enum Expression {
     Prefix(PrefixOp),
 }
 
-enum ValueExpression {
+pub enum ValueExpression {
     I64(i64),
     F64(f64),
     Constant(String),
 }
 
-struct FnExpression {
-    name: String,
-    parameters: Vec<ValueExpression>,
+pub struct FnExpression {
+    pub name: String,
+    pub parameters: Vec<ValueExpression>,
 }
 
-struct PrefixExpression {}
+pub struct PrefixExpression {
+    pub op: PrefixOp,
+    pub rhs: Box<Expression>,
+}
 
-enum PrefixOp {}
+pub enum PrefixOp {
+    Plus,
+    Minus,
+}
 
-struct InfixExpression {}
+pub struct InfixExpression {
+    pub op: InfixOp,
+    pub lhs: Box<Expression>,
+    pub rhs: Box<Expression>,
+}
 
-enum InfixOp {
+pub enum InfixOp {
     Add,
-    Sub,
+    Subtract,
     Multiply,
     Divide,
     Exponent,
