@@ -1,6 +1,6 @@
 # Mathline
 
-Command line assistant for mathematical expressions
+Natural language solver for mathematical expressions
 
 ## Examples
 
