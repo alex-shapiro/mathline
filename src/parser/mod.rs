@@ -54,7 +54,9 @@ impl<'a> Parser<'a> {
                     Expression::Value(ValueExpression::Variable(symbol))
                 }
             }
-            Token::Number(n) => Expression::Value(ValueExpression::Number(n)),
+            Token::Bool(b) => Expression::Value(ValueExpression::Bool(b)),
+            Token::I64(n) => Expression::Value(ValueExpression::I64(n)),
+            Token::F64(n) => Expression::Value(ValueExpression::F64(n)),
             Token::LeftParen => {
                 let lhs = self.parse_expr(0)?;
                 self.expect(Token::RightParen)?;

@@ -12,14 +12,10 @@ pub enum Expression {
 
 #[derive(Debug)]
 pub enum ValueExpression {
-    Number(Number),
+    Bool(bool),
+    I64(i64),
+    F64(f64),
     Variable(String),
-}
-
-#[derive(Debug, Default, PartialEq)]
-pub struct Number {
-    pub whole: u64,
-    pub fraction: Option<u64>,
 }
 
 #[derive(Debug)]
@@ -105,15 +101,6 @@ impl TryFrom<Op> for InfixOp {
     }
 }
 
-impl Number {
-    pub fn whole(n: u64) -> Self {
-        Number {
-            whole: n,
-            fraction: None,
-        }
-    }
-}
-
 impl Display for Expression {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -128,19 +115,11 @@ impl Display for Expression {
 impl Display for ValueExpression {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            ValueExpression::Number(num) => num.fmt(f),
+            ValueExpression::Bool(bool) => bool.fmt(f),
+            ValueExpression::I64(num) => num.fmt(f),
+            ValueExpression::F64(num) => num.fmt(f),
             ValueExpression::Variable(v) => v.fmt(f),
         }
-    }
-}
-
-impl Display for Number {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.whole)?;
-        if let Some(fraction) = self.fraction {
-            write!(f, ".{fraction}")?;
-        }
-        Ok(())
     }
 }
 

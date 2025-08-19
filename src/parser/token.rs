@@ -1,11 +1,10 @@
 use std::fmt::Display;
 
-use super::expression::Number;
-
 #[derive(PartialEq)]
 pub enum Token {
     Bool(bool),
-    Number(Number),
+    I64(i64),
+    F64(f64),
     Symbol(String),
     Op(Op),
     LeftParen,
@@ -37,7 +36,8 @@ impl Display for Token {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Token::Bool(bool) => bool.fmt(f),
-            Token::Number(num) => num.fmt(f),
+            Token::I64(num) => num.fmt(f),
+            Token::F64(num) => num.fmt(f),
             Token::Symbol(symbol) => symbol.fmt(f),
             Token::Op(op) => op.fmt(f),
             Token::LeftParen => write!(f, "("),

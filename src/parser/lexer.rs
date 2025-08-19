@@ -5,10 +5,7 @@ use fallible_iterator::FallibleIterator;
 use crate::{
     MLResult,
     error::MathlineError,
-    parser::{
-        expression::Number,
-        token::{Op, Token},
-    },
+    parser::token::{Op, Token},
 };
 
 pub struct Lexer<'a> {
@@ -99,23 +96,23 @@ impl<'a> FallibleIterator for Lexer<'a> {
                 ')' => Token::RightParen,
                 ',' => Token::Comma,
                 '⁰' => {
-                    self.next = Some(Token::Number(Number::whole(0)));
+                    self.next = Some(Token::I64(0));
                     Token::Op(Op::Exponent)
                 }
                 '¹' => {
-                    self.next = Some(Token::Number(Number::whole(1)));
+                    self.next = Some(Token::I64(1));
                     Token::Op(Op::Exponent)
                 }
                 '²' => {
-                    self.next = Some(Token::Number(Number::whole(2)));
+                    self.next = Some(Token::I64(2));
                     Token::Op(Op::Exponent)
                 }
                 '³' => {
-                    self.next = Some(Token::Number(Number::whole(3)));
+                    self.next = Some(Token::I64(3));
                     Token::Op(Op::Exponent)
                 }
                 '⁴' => {
-                    self.next = Some(Token::Number(Number::whole(4)));
+                    self.next = Some(Token::I64(4));
                     Token::Op(Op::Exponent)
                 }
                 _ if c.is_ascii_digit() => self.lex_number(c)?,
@@ -136,26 +133,33 @@ impl<'a> Lexer<'a> {
     }
 
     fn lex_number(&mut self, c: char) -> MLResult<Token> {
-        let mut number = Number::default();
-        number.whole = c.to_digit(10).unwrap() as u64;
+        let mut whole = c.to_digit(10).unwrap() as i64;
+        let mut fraction = 0.0f64;
+        let mut fraction_multiplier = 0.0f64;
 
         while let Some(c) = self.input.peek() {
             if let Some(digit) = c.to_digit(10) {
-                if let Some(fraction) = number.fraction {
-                    number.fraction = Some(fraction * 10 + (digit as u64));
+                if fraction_multiplier == 0.0 {
+                    whole *= 10;
+                    whole += digit as i64;
                 } else {
-                    number.whole = number.whole * 10 + (digit as u64);
+                    fraction += fraction_multiplier * (digit as f64);
+                    fraction_multiplier *= 0.1;
                 }
                 self.input.next();
             } else if *c == '.' {
-                number.fraction = Some(0);
+                fraction_multiplier = 0.1;
                 self.input.next();
             } else {
                 break;
             }
         }
 
-        Ok(Token::Number(number))
+        if fraction == 0.0 {
+            Ok(Token::I64(whole))
+        } else {
+            Ok(Token::F64(whole as f64 + fraction))
+        }
     }
 
     fn lex_symbol(&mut self, c: char) -> MLResult<Token> {
