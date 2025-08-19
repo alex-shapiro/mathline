@@ -14,10 +14,6 @@ impl OllamaClient {
     pub fn new(model: String) -> Self {
         Self { model }
     }
-
-    pub fn gemma3_4b() -> Self {
-        Self::new("gemma3:4b".to_string())
-    }
 }
 
 #[derive(Serialize)]

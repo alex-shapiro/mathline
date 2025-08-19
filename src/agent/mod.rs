@@ -1,8 +1,6 @@
 use crate::{MLResult, agent::ollama::OllamaClient};
 
-mod claude;
-mod ollama;
-mod openai;
+pub mod ollama;
 
 static SYSTEM_PROMPT: &str = "Transform the following request into a mathematical expression. Do not attempt to solve the expression. Use standard ASCII.";
 
@@ -16,8 +14,8 @@ pub struct Prompt<'a> {
     pub user_request: &'a str,
 }
 
-pub async fn call_agent(user_request: &str) -> MLResult<String> {
-    let client = OllamaClient::gemma3_4b();
+pub async fn call_agent(user_request: &str, model: &str) -> MLResult<String> {
+    let client = OllamaClient::new(model.to_string());
 
     client
         .messages(Prompt {
