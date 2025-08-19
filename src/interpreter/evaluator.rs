@@ -47,6 +47,7 @@ impl Evaluator {
             ValueExpression::I64(n) => Value::I64(n),
             ValueExpression::F64(n) => Value::F64(n),
             ValueExpression::Variable(v) => match v.as_str() {
+                "math" => Value::Module("math"),
                 "pi" | "PI" | "π" => Value::F64(std::f64::consts::PI),
                 "tau" | "TAU" | "τ" => Value::F64(std::f64::consts::TAU),
                 "e" => Value::F64(std::f64::consts::E),
@@ -194,7 +195,8 @@ impl Evaluator {
                 Value::Bool(l >= r)
             }
             InfixOp::Dot => {
-                todo!("dot expressions are not yet supported")
+                lhs.as_module()?;
+                rhs
             }
         };
         Ok(value)
@@ -213,6 +215,7 @@ impl Evaluator {
             "tan" => Self::eval_tan(parameters),
             "log" => Self::eval_log10(parameters),
             "ln" => Self::eval_ln(parameters),
+            "print" => Self::eval_print(parameters),
             _ => Err(MathlineError::FunctionIsNotSupported(expr.name)),
         }
     }
@@ -270,5 +273,16 @@ impl Evaluator {
         }
         let result = parameters[0].as_f64()?.ln();
         Ok(Value::F64(result))
+    }
+
+    fn eval_print(parameters: Vec<Value>) -> MLResult<Value> {
+        if parameters.len() != 1 {
+            return Err(MathlineError::InvalidFnParameterLength {
+                name: "print".to_string(),
+                len: parameters.len(),
+            });
+        }
+        let result = parameters[0];
+        Ok(result)
     }
 }

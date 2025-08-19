@@ -11,22 +11,30 @@ pub enum Value {
     Bool(bool),
     I64(i64),
     F64(f64),
+    Module(&'static str),
 }
 
 impl Value {
     pub fn as_bool(self) -> MLResult<bool> {
         match self {
             Value::Bool(b) => Ok(b),
-            Value::I64(_) => Err(MathlineError::CannotUseNumberAsBool),
-            Value::F64(_) => Err(MathlineError::CannotUseNumberAsBool),
+            Value::I64(_) | Value::F64(_) | Value::Module(_) => Err(MathlineError::CannotUseAsBool),
         }
     }
 
     pub fn as_f64(self) -> MLResult<f64> {
         match self {
-            Value::Bool(_) => Err(MathlineError::CannotUseBoolAsNumber),
             Value::I64(n) => Ok(n as f64),
             Value::F64(n) => Ok(n),
+            Value::Bool(_) | Value::Module(_) => Err(MathlineError::CannotUseAsNumber),
+        }
+    }
+
+    pub fn as_module(self) -> MLResult<&'static str> {
+        if let Value::Module(m) = self {
+            Ok(m)
+        } else {
+            Err(MathlineError::CannotUseAsModule)
         }
     }
 }
@@ -37,6 +45,7 @@ impl From<Value> for Expression {
             Value::Bool(b) => ValueExpression::Bool(b),
             Value::I64(n) => ValueExpression::I64(n),
             Value::F64(n) => ValueExpression::F64(n),
+            Value::Module(m) => ValueExpression::Variable(m.to_string()),
         })
     }
 }
@@ -47,6 +56,7 @@ impl Display for Value {
             Value::Bool(v) => v.fmt(f),
             Value::I64(v) => v.fmt(f),
             Value::F64(v) => write!(f, "{v:.5}"),
+            Value::Module(v) => v.fmt(f),
         }
     }
 }

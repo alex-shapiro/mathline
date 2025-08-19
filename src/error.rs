@@ -18,10 +18,12 @@ pub enum MathlineError {
     UnknownVariable(String),
     #[error("function {name} cannot have {len} parameters")]
     InvalidFnParameterLength { name: String, len: usize },
-    #[error("cannot use a bool value as a number")]
-    CannotUseBoolAsNumber,
-    #[error("cannot use a number as a bool value")]
-    CannotUseNumberAsBool,
+    #[error("cannot use a non-numeric value as a number")]
+    CannotUseAsNumber,
+    #[error("cannot use a non-boolean value as a bool")]
+    CannotUseAsBool,
+    #[error("cannot use a non-module value as a module")]
+    CannotUseAsModule,
     #[error("function {0} is not supported")]
     FunctionIsNotSupported(String),
 }
