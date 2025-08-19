@@ -26,6 +26,17 @@ Step: 20 ** 2 == 400 => true
 Answer: true
 ```
 
+**Word Problems**
+
+```sh
+mathline "if bob has three apples, jane has two, and carl has eleven, how many apples do they have together?" --model gpt-oss:20b
+LLM: 3 + 2 + 11
+Parse: 3 + 2 + 11
+Step: 3 + 2 => 5
+Step: 3 + 2 + 11 => 16
+Answer: 16
+```
+
 ## How it works
 
 Mathline works in three steps:
@@ -36,8 +47,8 @@ Mathline works in three steps:
 
 ## Ollama support
 
-Mathline calls out to [Ollama](https://ollama.com/). The default model is `gemma3:4b`.
-You can override the model with the `--model` CLI option. For example:
+Mathline calls out to your device's local [Ollama](https://ollama.com/) server.
+The default model is `gemma3:4b`. You can override the model with the `--model` CLI option. For example:
 
 ```sh
 mathline "what is two cubed?" --model gpt-oss:20b
