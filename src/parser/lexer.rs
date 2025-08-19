@@ -173,11 +173,11 @@ impl<'a> Lexer<'a> {
             }
         }
         match symbol.as_str() {
-            "True" | "true" => return Ok(Token::Bool(true)),
-            "False" | "false" => return Ok(Token::Bool(false)),
-            "not" => return Ok(Token::Op(Op::Not)),
-            "and" => return Ok(Token::Op(Op::And)),
-            "or" => return Ok(Token::Op(Op::Or)),
+            "True" | "true" => Ok(Token::Bool(true)),
+            "False" | "false" => Ok(Token::Bool(false)),
+            "not" => Ok(Token::Op(Op::Not)),
+            "and" => Ok(Token::Op(Op::And)),
+            "or" => Ok(Token::Op(Op::Or)),
             _ => Ok(Token::Symbol(symbol)),
         }
     }

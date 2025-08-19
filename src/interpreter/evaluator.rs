@@ -47,9 +47,9 @@ impl Evaluator {
             ValueExpression::I64(n) => Value::I64(n),
             ValueExpression::F64(n) => Value::F64(n),
             ValueExpression::Variable(v) => match v.as_str() {
-                "pi" | "PI" | "π" => Value::F64(3.14159),
-                "tau" | "TAU" | "τ" => Value::F64(6.28318),
-                "e" => Value::F64(2.71828),
+                "pi" | "PI" | "π" => Value::F64(std::f64::consts::PI),
+                "tau" | "TAU" | "τ" => Value::F64(std::f64::consts::TAU),
+                "e" => Value::F64(std::f64::consts::E),
                 _ => return Err(MathlineError::UnknownVariable(v.to_string())),
             },
         })
@@ -204,7 +204,7 @@ impl Evaluator {
         let parameters = expr
             .parameters
             .into_iter()
-            .map(|e| Self::eval_expr(e))
+            .map(Self::eval_expr)
             .collect::<MLResult<Vec<_>>>()?;
 
         match expr.name.as_str() {

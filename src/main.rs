@@ -33,12 +33,10 @@ async fn main() {
 async fn main_inner() -> MLResult<()> {
     let args: Args = argh::from_env();
     let model = args
-        .model
-        .as_ref()
-        .map(|s| s.as_str())
+        .model.as_deref()
         .unwrap_or("gemma3:4b");
 
-    let expression_string = match call_agent(&args.request, &model).await {
+    let expression_string = match call_agent(&args.request, model).await {
         Ok(response) => response,
         Err(error) => {
             eprintln!("{error}");
