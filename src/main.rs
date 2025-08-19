@@ -1,8 +1,11 @@
-use crate::{agent::call_agent, error::MathlineError, interpreter::lexer::Lexer};
+use fallible_iterator::FallibleIterator;
+
+use crate::{agent::call_agent, error::MathlineError, parser::Parser};
 
 mod agent;
 mod error;
 mod interpreter;
+mod parser;
 
 pub type MLResult<T> = std::result::Result<T, MathlineError>;
 
@@ -26,11 +29,9 @@ async fn main() -> MLResult<()> {
 
     println!("| {expression_string}");
 
-    let mut lexer = Lexer::new(&expression_string);
-
-    while let Some(token) = lexer.next()? {
-        println!("{token}");
+    let expressions: Vec<_> = Parser::new(&expression_string).collect()?;
+    for expr in expressions {
+        println!("{expr}");
     }
-
     Ok(())
 }

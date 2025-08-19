@@ -1,4 +1,4 @@
-use super::expression::Expression;
+use crate::parser::expression::Expression;
 
 pub struct Evaluator {
     expression: Expression,

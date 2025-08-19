@@ -6,4 +6,8 @@ pub enum MathlineError {
     Http(#[from] reqwest::Error),
     #[error("invalid char: {0}")]
     InvalidChar(char),
+    #[error("invalid syntax")]
+    InvalidSyntax,
+    #[error("invalid EOF")]
+    InvalidEOF,
 }
