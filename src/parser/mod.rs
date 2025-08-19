@@ -151,8 +151,8 @@ impl InfixOp {
             | InfixOp::GreaterThanOrEqual => (7, 8),
             InfixOp::Add | InfixOp::Subtract => (11, 12),
             InfixOp::Multiply | InfixOp::Divide | InfixOp::Modulo => (13, 14),
-            InfixOp::Exponent => (16, 9), // binds tightly to the left, loosely to the right
-            InfixOp::Dot => (18, 17),     // right associative
+            InfixOp::Exponent => (15, 16),
+            InfixOp::Dot => (18, 17), // right associative
         }
     }
 }

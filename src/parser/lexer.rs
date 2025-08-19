@@ -48,14 +48,14 @@ impl<'a> FallibleIterator for Lexer<'a> {
                 '^' => Token::Op(Op::Exponent),
                 '.' => Token::Op(Op::Dot),
                 '&' => {
-                    let Some('&') = self.input.next() else {
-                        return Err(MathlineError::InvalidSyntax);
+                    if let Some('&') = self.input.peek() {
+                        self.input.next();
                     };
                     Token::Op(Op::And)
                 }
                 '|' => {
-                    let Some('|') = self.input.next() else {
-                        return Err(MathlineError::InvalidSyntax);
+                    if let Some('|') = self.input.peek() {
+                        self.input.next();
                     };
                     Token::Op(Op::Or)
                 }
